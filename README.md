@@ -29,6 +29,7 @@ Use optional flags for image size (--square, --landscape, --portrait), style (--
 
 ## Variables
 
+```bash
 OPENAI_API_KEY: Your OpenAI API key (no default).
 
 SLACK_BOT_TOKEN: Your Slack Bot User OAuth Token (no default).
@@ -48,6 +49,7 @@ DEFAULT_IMAGE_SIZE: Default size of image (default: 1024x1024)
 DEFAULT_IMAGE_QUALITY: Default quality of image. (default: hd)
 
 DEFAULT_IMAGE_STYLE: Default style of image. (default: vivid)
+```
 
 ## Running the App on Your Local Machine or AWS Linux instance
 
