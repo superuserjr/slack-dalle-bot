@@ -31,23 +31,14 @@ Use optional flags for image size (--square, --landscape, --portrait), style (--
 
 ```bash
 OPENAI_API_KEY: Your OpenAI API key (no default).
-
 SLACK_BOT_TOKEN: Your Slack Bot User OAuth Token (no default).
-
 SLACK_APP_TOKEN: Your Slack App-Level Token (no default).
-
 OPENAI_DALLE_MODEL: The specific DALL-E model to use (default: "dall-e-3").
-
 OPENAI_RETRY_COUNT: Number of times to retry API call (default: 3).
-
 OPENAI_RETRY_DELAY: Delay between retry attempts (default: 5 seconds).
-
 OPENAI_IMAGE_COUNT: Number of images per prompt (default: 1).
-
 DEFAULT_IMAGE_SIZE: Default size of image (default: 1024x1024)
-
 DEFAULT_IMAGE_QUALITY: Default quality of image. (default: hd)
-
 DEFAULT_IMAGE_STYLE: Default style of image. (default: vivid)
 ```
 
