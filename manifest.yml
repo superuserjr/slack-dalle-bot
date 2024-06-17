@@ -1,0 +1,35 @@
+display_information:
+  name: DALL-E
+features:
+  app_home:
+    home_tab_enabled: true
+    messages_tab_enabled: true
+    messages_tab_read_only_enabled: false
+  bot_user:
+    display_name: DALL-E
+    always_online: true
+oauth_config:
+  scopes:
+    bot:
+      - commands
+      - app_mentions:read
+      - channels:history
+      - groups:history
+      - im:history
+      - mpim:history
+      - chat:write.public
+      - chat:write
+      - users:read
+      - reactions:write
+      - files:write
+settings:
+  event_subscriptions:
+    bot_events:
+      - app_mention
+      - message.channels
+      - message.groups
+      - message.im
+      - message.mpim
+  interactivity:
+    is_enabled: true
+  socket_mode_enabled: true
