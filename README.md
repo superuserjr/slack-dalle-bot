@@ -6,9 +6,10 @@ This project is a Slack Bot that integrates with OpenAI's DALL-E to generate ima
 
 ## Features
 
-Image Generation: Users can request images with specific prompts.
-Customization: Options for different image sizes, styles, and qualities.
-Retry Logic: Handles API errors and rate limits with a retry mechanism.
+Image Generation: Users can request images with specific prompts.  
+Revised Prompt: Option to send the revised prompt OpenAI creates back to the user.  
+Customization: Options for different image sizes, styles, and qualities.  
+Retry Logic: Handles API errors and rate limits with a retry mechanism.  
 Logging: Errors and information are logged for troubleshooting.
 
 ## Requirements

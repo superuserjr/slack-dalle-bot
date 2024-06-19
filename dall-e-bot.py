@@ -61,13 +61,13 @@ def load_config():
         "OPENAI_IMAGE_COUNT": int(os.getenv("OPENAI_IMAGE_COUNT", 1)),
         "DEFAULT_IMAGE_SIZE": os.getenv("DEFAULT_IMAGE_SIZE", "1024x1024"),
         "DEFAULT_IMAGE_QUALITY": os.getenv("DEFAULT_IMAGE_QUALITY", "hd"),
-        "DEFAULT_IMAGE_STYLE": os.getenv("DEFAULT_IMAGE_STYLE", "vivid")
+        "DEFAULT_IMAGE_STYLE": os.getenv("DEFAULT_IMAGE_STYLE", "vivid"),
+        "SEND_REVISED_PROMPT": os.getenv("SEND_REVISED_PROMPT", "false").lower() == "true"
     }
 
 
 # Load configuration
 config = load_config()
-
 
 # Initialize OpenAI API key
 openai.api_key = config["OPENAI_API_KEY"]
@@ -88,13 +88,11 @@ def generate_dalle_image(prompt, image_size=config["DEFAULT_IMAGE_SIZE"], image_
                 response_format='b64_json'
             )
 
-            # Uncomment for detailed OpenAPI response
-            # logging.info(f"OpenAI Response: {response}")
-
             if response and 'data' in response and response['data']:
                 b64_data = response['data'][0].get('b64_json')
+                revised_prompt = response['data'][0].get('revised_prompt', prompt)  # Extract revised_prompt
                 if b64_data:
-                    return b64_data
+                    return b64_data, revised_prompt
                 else:
                     raise ValueError("Base64 data is missing in the response.")
             else:
@@ -102,10 +100,10 @@ def generate_dalle_image(prompt, image_size=config["DEFAULT_IMAGE_SIZE"], image_
         except openai.error.OpenAIError as e:
             if 'safety system' in str(e).lower():
                 logger.error(f"Safety system rejection with prompt '{prompt}': {e}")
-                return "safety_rejection"
+                return "safety_rejection", None
             elif 'content filters' in str(e).lower():
                 logger.error(f"Content filter block with prompt '{prompt}': {e}")
-                return "content_filter_blocked"
+                return "content_filter_blocked", None
             else:
                 logger.error(f"OpenAI API error with prompt '{prompt}': {e}")
         except Exception as e:
@@ -116,7 +114,7 @@ def generate_dalle_image(prompt, image_size=config["DEFAULT_IMAGE_SIZE"], image_
                 time.sleep(config["OPENAI_RETRY_DELAY"])
             else:
                 logger.error("All retry attempts failed.")
-                return "retry_failed"
+                return "retry_failed", None
 
 
 # Function to handle rate limit errors
@@ -180,11 +178,20 @@ def handle_image_generation_and_response(event, client):
         else:
             prompt_parts.append(part)
 
-    prompt = ' '.join(prompt_parts)
+    final_prompt = ' '.join(prompt_parts)
 
-    logger.info(f"Prompt: {prompt}, Size: {image_size}, Style: {image_style}, Quality: {image_quality}")
+    image_data, revised_prompt = generate_dalle_image(final_prompt, image_size, image_style, image_quality)
 
-    image_data = generate_dalle_image(prompt, image_size, image_style, image_quality)
+    # Send the revised prompt back to the user if enabled
+    if config["SEND_REVISED_PROMPT"]:
+        try:
+            client.chat_postMessage(
+                channel=channel_id,
+                thread_ts=thread_ts,
+                text=f"*Revised prompt:* {revised_prompt}"
+            )
+        except SlackApiError as e:
+            logger.error(f"Error sending message: {e}")
 
     try:
         client.reactions_remove(
