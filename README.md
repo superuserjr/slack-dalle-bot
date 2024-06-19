@@ -42,6 +42,7 @@ OPENAI_IMAGE_COUNT: Number of images per prompt (default: 1).
 DEFAULT_IMAGE_SIZE: Default size of image (default: 1024x1024)
 DEFAULT_IMAGE_QUALITY: Default quality of image. (default: hd)
 DEFAULT_IMAGE_STYLE: Default style of image. (default: vivid)
+SEND_REVISED_PROMPT: Send the OpenAI generate revised prompt back to user. (default: false)
 ```
 
 ## Running the App on Your Local Machine or AWS Linux instance
